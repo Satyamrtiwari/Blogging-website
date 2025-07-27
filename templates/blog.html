@@ -1,0 +1,273 @@
+{% extends 'base.html' %}
+
+{% block title %}Blog{% endblock title %}
+
+{% block body %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+  body {
+    background: linear-gradient(135deg,rgb(209, 90, 128) 0%, #764ba2 100%);
+  }
+
+  .cta-button {
+    display: inline-block;
+    padding: 15px 40px;
+    background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  }
+  .cta-button1 {
+    display: inline-block;
+    padding: 15px 40px;
+    background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 px 25px rgba(0, 0, 0, 0.2);
+  }
+
+  .cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  }
+
+  .search-container {
+    background-color: white;
+    border-radius: 50px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    max-width: 500px;
+    width: 100%;
+    margin: 30px auto;
+    transition: all 0.3s ease;
+  }
+
+  .form-control.search-input {
+    border: none;
+    background: transparent;
+    padding-left: 20px;
+    font-size: 1rem;
+    height: auto;
+  }
+
+  .form-control.search-input:focus {
+    box-shadow: none;
+    outline: none;
+  }
+
+  .btn-search {
+    background-color: #007bff;
+    color: white;
+    border-radius: 50px;
+    padding: 0.375rem 0.75rem;
+    border: none;
+    transition: all 0.3s ease;
+  }
+
+  .btn-search:hover {
+    background-color: #0056b3;
+  }
+
+  .search-icon {
+    color: #6c757d;
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .content-preview {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+
+  .card {
+    width: 300px;
+    height: 420px;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .card img {
+    height: 160px;
+    object-fit: cover;
+  }
+</style>
+
+<!-- Button -->
+<div class="container mt-5 text-center">
+  <a href="/createblog" class="cta-button">Create a Post</a>
+</div>
+
+
+<div class="d-flex justify-content-end mt-0 me-3">
+  <a href="/createblog" class="cta-button1" style="padding: 10px 20px; font-size: 0.9rem;">My Posts</a>
+</div>
+
+
+
+<!-- Hero Image -->
+<div class="carousel-item">
+  <img src="https://wallpaperaccess.com/full/1919777.jpg" class="d-block w-100" alt="Banner"
+    style="height: 400px; object-fit: cover;">
+</div>
+
+<!-- Search Section -->
+<div class="container my-4">
+  <h1 class="text-center">Select your favourite one!</h1>
+
+  <div class="search-container position-relative">
+    <form method='get' action=/search class="d-flex align-items-center">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        class="search-icon feather feather-search">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input class="form-control search-input ps-5" type="search" placeholder="Search for your need..."
+        aria-label="Search">
+      <button class="btn btn-search ms-2" type="submit">Search</button>
+    </form>
+  </div>
+</div>
+
+
+<!-- Search -->
+<div class="container mt-5">
+  <h3 class="mb-4">All Blog Posts</h3>
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+
+    <!-- Dynamic Blog Posts -->
+    {% for post in posts %}
+    <div class="col">
+      <div class="card shadow-sm" style="width: 300px; height: 370px; border-radius: 10px; overflow: hidden;">
+        {% if post.image %}
+        <img src="{{ post.image.url }}" class="d-block w-100" alt="...">
+        {% else %}
+        <img src="https://via.placeholder.com/300x180" class="d-block w-100" alt="No Image">
+        {% endif %}
+        <div class="card-header bg-light">
+          <h5 class="mb-0"><strong>Title</strong>: {{ post.title }}</h5>
+        </div>
+        <div class="card-body d-flex flex-column justify-content-between">
+          <p class="card-text content-preview">
+            {{ post.content|truncatewords:20 }}
+          </p>
+          <div class="d-flex justify-content-between align-items-center mt-auto">
+            <div class="btn-group">
+              <a href="{% url 'blog_detail' post.id %}" class="btn btn-sm btn-outline-secondary">View</a>
+            </div>
+            <small class="text-body-secondary">{{ post.created_at }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+    <!-- Example Cards (inserted into same row) -->
+
+    <!-- Card 1 -->
+    <div class="col">
+      <div class="card shadow-sm" style="width: 300px; height: 370px; border-radius: 10px; overflow: hidden;">
+        <img src="http://www.pixelstalk.net/wp-content/uploads/2016/07/Full-HD-Wallpaper-1080p-Download.jpg" class="d-block w-100" alt="...">
+        <div class="card-header bg-light">
+          <h5 class="mb-0"><strong>Title</strong>: this is the title</h5>
+        </div>
+        <div class="card-body d-flex flex-column justify-content-between">
+          <p class="card-text content-preview">
+            Got it! You want the "Create a Post" button on the blog page to look and behave exactly like the "Get Started"...
+          </p>
+          <div class="d-flex justify-content-between align-items-center mt-auto">
+            <div class="btn-group">
+              <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+            </div>
+            <small class="text-body-secondary">exact date and time</small>
+          </div>
+        </div>
+      </div>  
+    </div>
+
+    <!-- Card 2 -->
+    <div class="col">
+      <div class="card shadow-sm" style="width: 300px; height: 370px; border-radius: 10px; overflow: hidden;">
+        <img src="https://wallpapercave.com/wp/wp2534979.jpg" class="d-block w-100" alt="...">
+        <div class="card-header bg-light">
+          <h5 class="mb-0"><strong>Title</strong>: this is the title</h5>
+        </div>
+        <div class="card-body d-flex flex-column justify-content-between">
+          <p class="card-text content-preview">
+            Got it! You want the "Create a Post" button on the blog page to look and behave exactly like the "Get Started"...
+          </p>
+          <div class="d-flex justify-content-between align-items-center mt-auto">
+            <div class="btn-group">
+              <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+            </div>
+            <small class="text-body-secondary">exact date and time</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="col">
+      <div class="card shadow-sm" style="width: 300px; height: 370px; border-radius: 10px; overflow: hidden;">
+        <img src="http://wallpapercave.com/wp/3tXYXSm.jpg" class="d-block w-100" alt="...">
+        <div class="card-header bg-light">
+          <h5 class="mb-0"><strong>Title</strong>: this is the title</h5>
+        </div>
+        <div class="card-body d-flex flex-column justify-content-between">
+          <p class="card-text content-preview">
+            Got it! You want the "Create a Post" button on the blog page to look and behave exactly like the "Get Started"...
+          </p>
+          <div class="d-flex justify-content-between align-items-center mt-auto">
+            <div class="btn-group">
+              <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+            </div>
+            <small class="text-body-secondary">exact date and time</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="col">
+      <div class="card shadow-sm" style="width: 300px; height: 370px; border-radius: 10px; overflow: hidden;">
+        <img src="https://tse2.mm.bing.net/th?id=OIP.k_ulHEwaR5quJ1ORzCACmQHaEK&pid=Api&P=0&h=220" class="d-block w-100" alt="...">
+        <div class="card-header bg-light">
+          <h5 class="mb-0"><strong>Title</strong>: this is the title</h5>
+        </div>
+        <div class="card-body d-flex flex-column justify-content-between">
+          <p class="card-text content-preview">
+            Got it! You want the "Create a Post" button on the blog page to look and behave exactly like the "Get Started"...
+          </p>
+          <div class="d-flex justify-content-between align-items-center mt-auto">
+            <div class="btn-group">
+              <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+            </div>
+            <small class="text-body-secondary">exact date and time</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+{% endblock body %}
